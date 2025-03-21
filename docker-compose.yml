@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Service pour Apache avec PHP
+  web:
+    build: .
+    ports:
+      - "8080:80"  # Lien entre le port 80 du conteneur et le port 8080 de la machine hôte
+    volumes:
+      - ./src:/var/www/html  # Monter le répertoire du projet dans le conteneur
+    depends_on:
+      - db  # Le service web dépend du service MySQL
+
+  # Service pour MySQL
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: garage12
+      MYSQL_USER: monutilisateur
+      MYSQL_PASSWORD: motdepasse
+    ports:
+      - "3306:3306"  # Lien entre le port 3306 du conteneur et le port 3306 de la machine hôte
+
+  # Service pour Composer
+  composer:
+    image: composer:latest
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html  # Monter le répertoire du projet
